@@ -17,10 +17,17 @@ const App = () => {
             });
           },
           error => {
-            setLocation(prevState => ({
-              ...prevState,
-              error: error.message
-            }));
+            if (!location.latitude || !location.longitude) {
+              setLocation(prevState => ({
+                ...prevState,
+                error: "Please turn on location services to use this application."
+              }));
+            } else {
+              setLocation(prevState => ({
+                ...prevState,
+                error: error.message
+              }));
+            }
           }
         );
       } else {
@@ -30,10 +37,11 @@ const App = () => {
         }));
       }
     };
-
+  
     getLocation();
-
-  }, []); // Empty array as second argument to run effect only once when component mounts
+  
+  }, []); 
+  
 
 
   const handleSubmit = async() =>{

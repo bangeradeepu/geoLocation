@@ -5,10 +5,10 @@ const App = () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null, error: null });
   const [res, setRes] = useState([]);
   const deliveryBoundaries = [
-    { lat: 13.130555, lng: 74.812233 },
-    { lat: 13.130557, lng: 74.812415 },
-    { lat: 13.130440, lng: 74.812412 },
-    { lat: 13.130446, lng: 74.812229 }
+    { lat: 13.130675, lng: 74.812155 },
+    { lat: 13.130687, lng: 74.812532 },
+    { lat: 13.130320, lng: 74.812527 },
+    { lat: 13.130326, lng: 74.812101 }
     // Add more boundary coordinates as needed
   ];
 

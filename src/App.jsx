@@ -17,11 +17,19 @@ const App = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           position => {
-            setLocation({
+            const userLocation = {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
               error: null
-            });
+            };
+            if (checkDeliveryArea(userLocation)) {
+              setLocation(userLocation);
+            } else {
+              setLocation(prevState => ({
+                ...prevState,
+                error: "Sorry, delivery is not available in your location."
+              }));
+            }
           },
           error => {
             if (!location.latitude || !location.longitude) {
@@ -49,9 +57,8 @@ const App = () => {
 
   }, []);
 
-
   const handleSubmit = async () => {
-    if (checkDeliveryArea()) {
+    if (location.latitude && location.longitude) {
       let mapLink = `https://www.google.com/maps?q=${location.latitude},${location.longitude}`
       try {
         await axios.post(`https://65f278c9034bdbecc764dd86.mockapi.io/api/users`, {
@@ -63,8 +70,6 @@ const App = () => {
       } catch (error) {
         console.error(error);
       }
-    } else {
-      alert('Sorry, delivery is not available in your location.');
     }
   }
 
@@ -72,7 +77,6 @@ const App = () => {
     try {
       const response = await axios.get(`https://65f278c9034bdbecc764dd86.mockapi.io/api/users`);
       setRes(response.data);
-
     } catch (error) {
       console.error(error);
     }
@@ -90,20 +94,16 @@ const App = () => {
     }
   }
 
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  const checkDeliveryArea = () => {
-    if (location.latitude && location.longitude) {
+  const checkDeliveryArea = (userLocation) => {
+    if (userLocation) {
       let inside = false;
       for (let i = 0, j = deliveryBoundaries.length - 1; i < deliveryBoundaries.length; j = i++) {
         const xi = deliveryBoundaries[i].lat;
         const yi = deliveryBoundaries[i].lng;
         const xj = deliveryBoundaries[j].lat;
         const yj = deliveryBoundaries[j].lng;
-        const intersect = ((yi > location.longitude) !== (yj > location.longitude)) &&
-          (location.latitude < (xj - xi) * (location.longitude - yi) / (yj - yi) + xi);
+        const intersect = ((yi > userLocation.longitude) !== (yj > userLocation.longitude)) &&
+          (userLocation.latitude < (xj - xi) * (userLocation.longitude - yi) / (yj - yi) + xi);
         if (intersect) inside = !inside;
       }
       return inside;

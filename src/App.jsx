@@ -4,14 +4,27 @@ import axios from 'axios';
 const App = () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null, error: null });
   const [res, setRes] = useState([]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://65f278c9034bdbecc764dd86.mockapi.io/api/users`);
+      setRes(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+useEffect(() =>{
+fetchData();
+},[])
+
+
   const deliveryBoundaries = [
-    { lat: 13.130675, lng: 74.812155 },
+    { lat: 13.130757, lng: 74.812136 },
     { lat: 13.130687, lng: 74.812532 },
     { lat: 13.130320, lng: 74.812527 },
     { lat: 13.130326, lng: 74.812101 }
     // Add more boundary coordinates as needed
   ];
-
   useEffect(() => {
     const getLocation = () => {
       if (navigator.geolocation) {
@@ -22,8 +35,10 @@ const App = () => {
               longitude: position.coords.longitude,
               error: null
             };
+            console.log(userLocation)
             if (checkDeliveryArea(userLocation)) {
               setLocation(userLocation);
+             
             } else {
               setLocation(prevState => ({
                 ...prevState,
@@ -70,15 +85,6 @@ const App = () => {
       } catch (error) {
         console.error(error);
       }
-    }
-  }
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`https://65f278c9034bdbecc764dd86.mockapi.io/api/users`);
-      setRes(response.data);
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -130,8 +136,10 @@ const App = () => {
       {res.map((data) => (
             <div key={data.id}>
               <div>
-                {data.lat},{data.long}
+                <div>latitude:{data.lat}</div>
+                <div>longitude:{data.long}</div>
               </div>
+              <br />
               <a
                 href={data.name}
                 target="_blank"
@@ -139,7 +147,9 @@ const App = () => {
               >
                 Open in Google Maps
               </a>
+              &nbsp;&nbsp;
               <button onClick={() => handleDelete(data.id)}>Delete</button>
+              <hr />
             </div>
           ))}
     </div>

@@ -124,7 +124,10 @@ const App = () => {
 
           <br />
           <hr />
-          {res.map((data) => (
+          
+        </div>
+      )}
+      {res.map((data) => (
             <div key={data.id}>
               <div>
                 {data.lat},{data.long}
@@ -139,8 +142,6 @@ const App = () => {
               <button onClick={() => handleDelete(data.id)}>Delete</button>
             </div>
           ))}
-        </div>
-      )}
     </div>
   );
 };

@@ -1,0 +1,6 @@
+{
+  "appId": "com.geolocation",
+  "appName": "geolocation",
+  "webDir": "dist",
+  "bundledWebRuntime": true
+}
